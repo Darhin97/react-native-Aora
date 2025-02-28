@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const TabsLayout = () => {
+const Home = () => {
   return (
     <View>
-      <Text>_Layout</Text>
+      <Text>Home</Text>
     </View>
   );
 };
-export default TabsLayout;
+export default Home;

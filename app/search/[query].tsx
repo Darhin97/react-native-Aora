@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const TabsLayout = () => {
+const Search = () => {
   return (
     <View>
-      <Text>_Layout</Text>
+      <Text>[Query</Text>
     </View>
   );
 };
-export default TabsLayout;
+export default Search;
