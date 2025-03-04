@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,7 +7,7 @@ import {
   RefreshControl,
   Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
 import SearchInput from "@/components/search-input";
@@ -14,6 +15,7 @@ import Trending from "@/components/trending";
 import EmptyState from "@/components/empty-state";
 import { getAllPosts } from "@/lib/appwrite";
 import { useAppwrite } from "@/lib/use-appwrite";
+import VideoCard from "@/components/video-card";
 
 const Home = () => {
   const { data: posts, refetch } = useAppwrite(getAllPosts);
@@ -28,15 +30,14 @@ const Home = () => {
 
     setRefreshing(false);
   };
+  // console.log({ posts });
 
   return (
     <SafeAreaView className={"bg-primary h-full"}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <Text className={"text-3xl text-white"}>{item.title}</Text>
-        )}
+        renderItem={({ item }) => <VideoCard video={item} />}
         ListHeaderComponent={() => (
           <View className={"my-6 px-4 space-y-2"}>
             <View className={"justify-between items-start flex-row mb-6"}>
@@ -63,7 +64,7 @@ const Home = () => {
                 Latest Video
               </Text>
 
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
+              <Trending posts={[{ $id: 1 }, { $id: 2 }, { $id: 3 }] ?? []} />
             </View>
           </View>
         )}

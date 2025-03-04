@@ -3,7 +3,7 @@ import React from "react";
 
 interface TrendingProps {
   posts: {
-    id: number;
+    $id: number | string;
   }[];
 }
 
@@ -11,9 +11,9 @@ const Trending = ({ posts }: TrendingProps) => {
   return (
     <FlatList
       data={posts}
-      keyExtractor={(item) => item.$id}
+      keyExtractor={(item) => item.$id as string}
       renderItem={({ item }) => (
-        <Text className={"text-3xl text-white"}>{item.id}</Text>
+        <Text className={"text-3xl text-white"}>{item.$id}</Text>
       )}
       horizontal
     />

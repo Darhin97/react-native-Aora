@@ -19,7 +19,6 @@ const SearchInput = ({
   value,
   handleChangeText,
   keyboardType,
-
   ...props
 }: FormFieldProps) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);

@@ -5,6 +5,7 @@ import {
   Databases,
   ID,
   Query,
+  Models,
 } from "react-native-appwrite";
 
 export const appwriteConfig = {
@@ -28,6 +29,24 @@ client
 const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
+
+interface Creator {
+  username: string;
+  email: string;
+  avatar: string;
+  accountId: string;
+}
+
+interface VideoDocument extends Models.Document {
+  total: number;
+  documents: {
+    title: string;
+    thumbnail: string;
+    prompt: string;
+    video: string;
+    creator: Creator;
+  }[];
+}
 
 export const createUser = async (
   email: string,
@@ -95,13 +114,16 @@ export const getCurrentUser = async () => {
   return currentUser.documents[0];
 };
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (): Promise<
+  Models.DocumentList<VideoDocument>
+> => {
   try {
-    const posts = await databases.listDocuments(
+    const posts = await databases.listDocuments<VideoDocument>(
       appwriteConfig.databaseId,
       appwriteConfig.videoCollectionId,
     );
-    return posts.documents;
+
+    return posts;
   } catch (e: any) {
     console.error(e);
     throw new Error("Something went wrong", e);
