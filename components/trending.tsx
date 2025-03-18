@@ -70,8 +70,6 @@ const TrendingItem = ({ post, activeItem }: Iprop) => {
 
   const playVideo = () => player.play();
 
-  console.log("isPlaying", isPlaying);
-
   return (
     <Animatable.View
       className={"mr-5"}
