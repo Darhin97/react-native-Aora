@@ -129,3 +129,20 @@ export const getAllPosts = async (): Promise<
     throw new Error("Something went wrong", e);
   }
 };
+
+export const getLatestPosts = async (): Promise<
+  Models.DocumentList<VideoDocument>
+> => {
+  try {
+    const posts = await databases.listDocuments<VideoDocument>(
+      appwriteConfig.databaseId,
+      appwriteConfig.videoCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(7)],
+    );
+
+    return posts;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error("Something went wrong", e);
+  }
+};

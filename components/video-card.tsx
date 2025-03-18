@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Dimensions } from "react-native";
 import { Models } from "react-native-appwrite";
 import { icons } from "@/constants";
-import uri from "ajv/lib/runtime/uri";
+import { useVideoPlayer, VideoView } from "expo-video";
+import { useEvent } from "expo";
 
 interface Creator {
   username: string;
@@ -30,7 +31,18 @@ const VideoCard = ({
     creator: { username, avatar },
   },
 }: VideoCardProps) => {
-  const [play, setPlay] = useState<boolean>(false);
+  const v =
+    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+
+  const player = useVideoPlayer(v, (player) => {
+    player.staysActiveInBackground = true;
+  });
+
+  const { isPlaying } = useEvent(player, "playingChange", {
+    isPlaying: player.playing,
+  });
+
+  const playVideo = () => player.play();
 
   return (
     <View className={"flex-col items-center px-4 mb-14"}>
@@ -70,14 +82,27 @@ const VideoCard = ({
           />
         </View>
       </View>
-      {play ? (
-        <Text> playing</Text>
+      {isPlaying ? (
+        <View
+          className={
+            "w-[100%] h-60  mt-5 bg-white/10 relative items-center justify-center"
+          }
+        >
+          <VideoView
+            player={player}
+            allowsFullscreen={true}
+            contentFit={"contain"}
+            nativeControls={true}
+            style={{
+              width: "100%",
+              height: 240,
+            }}
+          />
+        </View>
       ) : (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => {
-            setPlay(true);
-          }}
+          onPress={playVideo}
           className={
             "w-full h-60 rounded-xl mt-3 relative justify-center items-center"
           }
