@@ -150,7 +150,6 @@ export const getLatestPosts = async (): Promise<
 export const searchPosts = async (
   query: string,
 ): Promise<Models.DocumentList<VideoDocument>> => {
-  console.log(query);
   try {
     const posts = await databases.listDocuments<VideoDocument>(
       appwriteConfig.databaseId,
