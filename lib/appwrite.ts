@@ -13,7 +13,7 @@ export const appwriteConfig = {
   platform: "com.lupi.flora",
   projectId: "67c2fefd00356abaeed8",
   databaseId: "67c301f4000331457dc2",
-  userCollectionId: "67c3021a00323632d051",
+  userCollectionId: "67dc02cc002c0aa483d1",
   videoCollectionId: "67c3024c003831737aa7",
   storageId: "67c31262003b877559e3",
 };
@@ -144,5 +144,49 @@ export const getLatestPosts = async (): Promise<
   } catch (e: any) {
     console.error(e);
     throw new Error("Something went wrong", e);
+  }
+};
+
+export const searchPosts = async (
+  query: string,
+): Promise<Models.DocumentList<VideoDocument>> => {
+  console.log(query);
+  try {
+    const posts = await databases.listDocuments<VideoDocument>(
+      appwriteConfig.databaseId,
+      appwriteConfig.videoCollectionId,
+      query ? [Query.search("title", query)] : undefined,
+    );
+
+    return posts;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error("Something went wrong", e);
+  }
+};
+
+export const getUserPosts = async (
+  userId: string,
+): Promise<Models.DocumentList<VideoDocument>> => {
+  try {
+    const posts = await databases.listDocuments<VideoDocument>(
+      appwriteConfig.databaseId,
+      appwriteConfig.videoCollectionId,
+      [Query.equal("creator", userId)],
+    );
+
+    return posts;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error("Something went wrong", e);
+  }
+};
+
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+    return session;
+  } catch (e) {
+    throw new Error(`Failed to logout: ${e}`);
   }
 };

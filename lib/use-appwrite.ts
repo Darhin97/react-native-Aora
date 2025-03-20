@@ -21,11 +21,12 @@ export const useAppwrite = (fn: any) => {
   const [data, setData] = useState<VideoDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
+  const refetchData = async () => {
     setIsLoading(true);
 
     try {
       const res = await fn();
+
       setData(res.documents);
     } catch (e: any) {
       Alert.alert("Error", e.message);
@@ -35,10 +36,36 @@ export const useAppwrite = (fn: any) => {
   };
 
   useEffect(() => {
+    let ignore = false;
+
+    const fetchData = async () => {
+      setIsLoading(true);
+
+      try {
+        const res = await fn();
+
+        if (!ignore) {
+          setData(res.documents);
+        }
+      } catch (e: any) {
+        if (!ignore) {
+          Alert.alert("Error", e.message);
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
+      }
+    };
+
     fetchData();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
-  const refetch = () => fetchData();
+  const refetch = () => refetchData();
 
   return { data, isLoading, refetch };
 };
