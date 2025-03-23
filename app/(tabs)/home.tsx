@@ -17,12 +17,18 @@ import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
 import { useAppwrite } from "@/lib/use-appwrite";
 import VideoCard from "@/components/video-card";
 import { useGlobalContext } from "@/context/global-provider";
+import Loader from "@/components/loader";
 
 const Home = () => {
-  const { user, setUser, setIsLoggedIn } = useGlobalContext();
+  const { user } = useGlobalContext();
 
-  const { data: posts, refetch } = useAppwrite(getAllPosts);
-  const { data: latestPosts } = useAppwrite(getLatestPosts);
+  const {
+    data: posts,
+    refetch,
+    isLoading: postLoading,
+  } = useAppwrite(getAllPosts);
+  const { data: latestPosts, isLoading: latestPostsLoading } =
+    useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -35,6 +41,10 @@ const Home = () => {
     setRefreshing(false);
   };
   // console.log({ latestPosts });
+
+  if (postLoading && latestPosts) {
+    return <Loader />;
+  }
 
   return (
     <SafeAreaView className={"bg-primary h-full"}>
